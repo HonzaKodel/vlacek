@@ -31,7 +31,7 @@ class VlacekTest {
         vagonek = vlacek.getVagonekByIndex(3);
         assertEquals(VagonekType.DRUHA_TRIDA, vagonek.getType());
         assertEquals(3, vagonek.getUmisteni());
-        assertTrue(this::isPostovniVagonLast);
+       assertTrue(this::isPostovniVagonLast);
     }
 
     @Test
