@@ -51,6 +51,11 @@ public class Vlacek {
                 setUmisteni();
                 break;
 
+            case JIDELNI:
+                pridatJidelniVagonek();
+                setUmisteni();
+
+                break;
         }
         delka ++;
     }
@@ -67,29 +72,38 @@ public class Vlacek {
 
 
     public void setUmisteni() {
-            Vagonek zaLokomotivou = lokomotiva.getNasledujici();
-            for (int i = 0; i < delka; i++) {
-                zaLokomotivou.setUmisteni(zaLokomotivou.getPredchozi().getUmisteni() + 1);
-                zaLokomotivou = zaLokomotivou.getNasledujici();
-
-            }
+        Vagonek zaLokomotivou = lokomotiva.getNasledujici();
+        for (int i = 1; i <= delka; i++) {
+            zaLokomotivou.setUmisteni(zaLokomotivou.getPredchozi().getUmisteni() + 1);
+            zaLokomotivou = zaLokomotivou.getNasledujici();
+        }
     }
 
     public Vagonek getLastVagonekByType(VagonekType type) {
 
-         return null;
-    }
+Vagonek vagonek = new Vagonek(type);
 
-    public Vagonek najdiPosledniPrvniTridy(){
-
-        int i = 2;
-
-        while (getVagonekByIndex(i).getType() == VagonekType.PRVNI_TRIDA) {
-
-            i++;
+Vagonek temp = posledni;
+switch (type) {
+    case PRVNI_TRIDA:
+        for (int i = 1; i < getDelkaByType(type) ; i++) {
+            vagonek = getVagonekByIndex(i);
         }
-
-        return getVagonekByIndex(i);
+        break;
+    case DRUHA_TRIDA:
+        for (int i = 1+getDelkaByType(VagonekType.PRVNI_TRIDA); i < getDelkaByType(type) ; i++) {
+            vagonek = getVagonekByIndex(i);
+        }
+        break;
+    case JIDELNI:
+        for (int i = 0; i < delka  ; i++) {
+            if (temp.getType() == VagonekType.POSTOVNI){
+                return  temp;
+            }
+        }
+        break;
+}
+return temp;
 
     }
 
@@ -112,23 +126,25 @@ public class Vlacek {
     public void pridatJidelniVagonek() {
         Vagonek jidelni = new Vagonek(VagonekType.JIDELNI);
 
+        Vagonek druha_trida = new Vagonek(VagonekType.DRUHA_TRIDA);
+        Vagonek prvni_trida = new Vagonek(VagonekType.PRVNI_TRIDA);
+
         int i = 2;
 
-        while (getVagonekByIndex(i).getType() != VagonekType.PRVNI_TRIDA){
-            System.out.println("1");
+        if (getVagonekByIndex(i).getType() == VagonekType.PRVNI_TRIDA && getVagonekByIndex(i+1).getType() == VagonekType.DRUHA_TRIDA) {
+            jidelni.setPredchozi(prvni_trida);
+            jidelni.setNasledujici(druha_trida);
+
+            prvni_trida.setNasledujici(jidelni);
+            druha_trida.setPredchozi(jidelni);
+
+
+            setUmisteni();
+
             i++;
+            delka++;
+
         }
-
-        Vagonek pred = getVagonekByIndex(i);
-        pred.getPredchozi().setNasledujici(jidelni);
-        jidelni.setNasledujici(pred);
-        jidelni.setPredchozi(pred.getPredchozi());
-        jidelni.setNasledujici(pred);
-        setUmisteni();
-        delka ++;
-
-
-
     }
 
     /**
@@ -139,16 +155,12 @@ public class Vlacek {
      */
     public int getDelkaByType(VagonekType type) {
         int delkaTypu = 0;
-        switch (type) {
-            case PRVNI_TRIDA:
-                for (int i = 0; i < delka; i++) {
-                    if (getVagonekByIndex(i).getType() != VagonekType.PRVNI_TRIDA) {
+
+                for (int i = 1; i <= delka; i++) {
+                    if (getVagonekByIndex(i).getType() == type) {
                         delkaTypu++;
                     }
                 }
-                break;
-            case DRUHA_TRIDA:
-        }
         return delkaTypu;
     }
 

@@ -36,6 +36,7 @@ class VlacekTest {
 
     @Test
     void test3() {
+        test2();
         assertTrue(vlacek.getJidelniVozy().isEmpty());
         assertEquals(2, vlacek.getDelkaByType(VagonekType.DRUHA_TRIDA));
         assertEquals(1, vlacek.getDelkaByType(VagonekType.PRVNI_TRIDA));
@@ -43,12 +44,12 @@ class VlacekTest {
 
     @Test
     void test4() {
-        test2(); // L,1,2,2,P
+        test2(); // L,1,J,2,2,P
         vlacek.pridatVagonek(VagonekType.JIDELNI);
         Vagonek vagonek = vlacek.getVagonekByIndex(3);
-        assertEquals(VagonekType.JIDELNI, vagonek.getType());
+       assertEquals(VagonekType.JIDELNI, vagonek.getType());
         vagonek = vlacek.getVagonekByIndex(5);
-        assertEquals(VagonekType.DRUHA_TRIDA, vagonek.getType());
+       assertEquals(VagonekType.DRUHA_TRIDA, vagonek.getType());
         assertTrue(this::isPostovniVagonLast);
     }
 
